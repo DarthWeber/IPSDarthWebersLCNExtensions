@@ -1,6 +1,6 @@
 <?
 
-	class IOFilterTest extends IPSModule
+	class LCNGetKeyLocks extends IPSModule
 	{
 
 		public function Create() {
