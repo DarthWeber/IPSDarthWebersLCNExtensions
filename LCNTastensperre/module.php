@@ -33,7 +33,7 @@
 
 			//Print buffer
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
-			IPS_LogMessage("IOTest", utf8_decode(json_decode($JSONString)));
+			IPS_LogMessage("IOTest", utf8_decode($data->Buffer));
 			
 		}
 		
