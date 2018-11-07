@@ -27,7 +27,7 @@
 			//Apply filter
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
       IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
-			$this->SetReceiveDataFilter(".*=M000022\.TX[0-9]{12}.*");
+			$this->SetReceiveDataFilter(".*=M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.TX[0-9]{12}.*");
 			
 		}
 		
@@ -42,13 +42,13 @@
 			//Print buffer
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
-      if (preg_match('/=(?<modul>M[0-9]{6})\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
+      if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
   			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
         }
       }
 		}
 		
-	
+	 
 	}
 
 ?>
