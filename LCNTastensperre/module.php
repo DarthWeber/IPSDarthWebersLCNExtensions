@@ -25,13 +25,15 @@
 		
 		public function ReceiveData($JSONString)
 		{
+			//$data = json_decode($JSONString);
 			$data = json_decode($JSONString);
 
 			//Parse and write values to our buffer
-			$this->SetBuffer("Test", utf8_decode($data->Buffer));
+			//$this->SetBuffer("Test", utf8_decode($data->Buffer));
 
 			//Print buffer
-			IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
+			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
+			IPS_LogMessage("IOTest", utf8_decode(json_decode($JSONString)));
 			
 		}
 		
