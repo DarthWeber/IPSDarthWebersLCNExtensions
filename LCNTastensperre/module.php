@@ -34,7 +34,9 @@
 			//Print buffer
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
-  			IPS_LogMessage("IOTest", $line);
+      if (preg_match('/=(?<modul>M[0-9]{6})\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
+  			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
+        }
       }
 		}
 		
