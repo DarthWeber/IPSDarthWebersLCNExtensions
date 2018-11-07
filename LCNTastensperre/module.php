@@ -26,6 +26,7 @@
 			
 			//Apply filter
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
+      IPS_LogMessage("IOTest", "Inititalisiere Filter M000".$this->RegisterPropertyInteger("ModulID"));
 			$this->SetReceiveDataFilter(".*=M000022\.TX[0-9]{12}.*");
 			
 		}
