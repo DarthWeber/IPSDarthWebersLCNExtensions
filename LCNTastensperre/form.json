@@ -1,6 +1,7 @@
 {
 	"elements":
 	[
-		{ "name": "ReceiveFilter", "type": "ValidationTextBox", "caption": "Receive Filter" }
+		{ "name": "ReceiveFilter", "type": "ValidationTextBox", "caption": "Receive Filter" },
+		{ "name": "Timer_1", "type": "IntervalBox", "caption": "Sekunden" }
 	]
 }
