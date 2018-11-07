@@ -33,8 +33,9 @@
 
 			//Print buffer
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
-			IPS_LogMessage("IOTest", utf8_decode($data->Buffer));
-			
+      foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
+  			IPS_LogMessage("IOTest", $line);
+      }
 		}
 		
 	
