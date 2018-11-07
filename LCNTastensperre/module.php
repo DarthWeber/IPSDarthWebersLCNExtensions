@@ -1,14 +1,19 @@
 <?
-
 	class LCNGetKeyLocks extends IPSModule
 	{
 
+  	public function Destroy() 
+  	{
+  		//Never delete this line!
+  		parent::Destroy();
+  		$this->SetTimerInterval("Timer_1", 0);
+  	}
 		public function Create() {
 			//Never delete this line!
 			parent::Create();
 			
 			$this->RegisterPropertyString("ReceiveFilter", ".*Hallo.*");
-
+   		$this->RegisterPropertyInteger("Timer_1", 60);
 		}
 		public function ApplyChanges()
 		{
