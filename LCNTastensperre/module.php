@@ -45,7 +45,7 @@
 			  return false;
   		}
     IPS_LogMessage("IOTest", "Sende TX Command");
-    $this->SetValueInteger("TastentabelleA", 99);
+    //$this->SetValueInteger("TastentabelleA", 99);
 		}
 		
 		public function ReceiveData($JSONString)
