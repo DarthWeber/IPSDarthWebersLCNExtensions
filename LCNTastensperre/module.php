@@ -13,8 +13,11 @@
 			
 			//$this->RegisterPropertyString("ReceiveFilter", ".*Hallo.*");
    		$this->RegisterPropertyInteger("ModulID", 22);
-      $this->RegisterPropertyInteger("Intervall", 3600);
+      $this->RegisterPropertyInteger("Intervall", 60);
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
+      
+      $this->RegisterVariableInteger("TastentabelleA", "Tastentabelle A");
+      
    	}
 		public function ApplyChanges()
 		{
@@ -42,6 +45,7 @@
 			  return false;
   		}
     IPS_LogMessage("IOTest", "Sende TX Command");
+    $this->SetValueInteger("Tastentabelle A", 99);
 		}
 		
 		public function ReceiveData($JSONString)
@@ -57,11 +61,9 @@
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
       if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
   			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
+        $this->SetValueInteger("Tastentabelle A", intval($treffer['A']));
         }
       }
 		}
-		
-	 
 	}
-
 ?>
