@@ -6,7 +6,6 @@
   	{
   		//Never delete this line!
   		parent::Destroy();
-  		$this->SetTimerInterval("Timer_1", 0);
   	}
 		public function Create() {
 			//Never delete this line!
@@ -14,8 +13,9 @@
 			
 			//$this->RegisterPropertyString("ReceiveFilter", ".*Hallo.*");
    		$this->RegisterPropertyInteger("ModulID", 22);
-   		$this->RegisterPropertyInteger("Timer_1", 60);
-		}
+      $this->RegisterPropertyInteger("Intervall", 3600);
+      $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
+   	}
 		public function ApplyChanges()
 		{
 			//Never delete this line!
@@ -28,7 +28,20 @@
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
       IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
 			$this->SetReceiveDataFilter(".*=M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.TX[0-9]{12}.*");
-			
+	
+  		$this->Update();
+	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
+
+		}
+
+    public function Update()
+    {
+  		if (IPS_GetKernelRunlevel() !== 10103)
+	   	{
+		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
+			  return false;
+  		}
+    IPS_LogMessage("IOTest", "Sende TX Command");
 		}
 		
 		public function ReceiveData($JSONString)
