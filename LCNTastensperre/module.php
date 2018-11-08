@@ -45,7 +45,7 @@
 			  return false;
   		}
     IPS_LogMessage("IOTest", "Sende TX Command");
-    $this->SetValueInteger("Tastentabelle A", 99);
+    $this->SetValueInteger("TastentabelleA", 99);
 		}
 		
 		public function ReceiveData($JSONString)
@@ -61,7 +61,7 @@
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
       if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
   			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
-        $this->SetValueInteger("Tastentabelle A", intval($treffer['A']));
+        $this->SetValueInteger("TastentabelleA", intval($treffer['A']));
         }
       }
 		}
