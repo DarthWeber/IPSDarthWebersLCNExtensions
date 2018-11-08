@@ -17,6 +17,9 @@
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
       
       $this->RegisterVariableInteger("TastentabelleA", "Tastentabelle A");
+      $this->RegisterVariableInteger("TastentabelleB", "Tastentabelle B");
+      $this->RegisterVariableInteger("TastentabelleC", "Tastentabelle C");
+      $this->RegisterVariableInteger("TastentabelleD", "Tastentabelle D");
       
    	}
 		public function ApplyChanges()
@@ -60,8 +63,11 @@
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
       if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
-  			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
+//  			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
         $this->SetValueInteger("TastentabelleA", intval($treffer['A']));
+        $this->SetValueInteger("TastentabelleB", intval($treffer['B']));
+        $this->SetValueInteger("TastentabelleC", intval($treffer['C']));
+        $this->SetValueInteger("TastentabelleD", intval($treffer['D']));
         }
       }
 		}
