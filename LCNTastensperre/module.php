@@ -45,7 +45,7 @@
 			  return false;
   		}
     IPS_LogMessage("IOTest", "Sende TX Command");
-    //$this->SetValueInteger("TastentabelleA", 99);
+    $this->SetValueInteger("TastentabelleA", 99);
 		}
 		
 		public function ReceiveData($JSONString)
@@ -65,5 +65,38 @@
         }
       }
 		}
+    private function SetValueInteger($Ident, $value)
+    {
+        $id = $this->GetIDForIdent($Ident);
+        if (GetValueInteger($id) <> $value)
+        {
+            SetValueInteger($id, $value);
+            return true;
+        }
+        return false;
+    }
+	
+  	private function SetValueFloat($Ident, $value)
+      {
+          $id = $this->GetIDForIdent($Ident);
+          if (GetValueFloat($id) <> $value)
+          {
+              SetValueFloat($id, $value);
+              return true;
+          }
+          return false;
+      }
+  	
+  	private function SetValueString($Ident, $value)
+      {
+          $id = $this->GetIDForIdent($Ident);
+          if (GetValueString($id) <> $value)
+          {
+              SetValueString($id, $value);
+              return true;
+          }
+          return false;
+      }
+
 	}
 ?>
