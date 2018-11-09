@@ -46,7 +46,8 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-    IPS_LogMessage("IOTest", "Sende TX Command an ".($this->ReadPropertyString("ReceiveFilter"))." mit >M.".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."TX");
+    IPS_LogMessage("IOTest", "Sende TX Command an ".($this->InstanceID)." mit >M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".TX");
+    $this->SendDataToParent(json_encode(Array("DataID" => "{B87AC955-F258-468B-92FE-F4E0866A9E18}", "Buffer" => ">M000085.PIN001\n")));
     //CSCK_SendText($this->ReadPropertyString("ReceiveFilter"),">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."TX");
 		}
 		
