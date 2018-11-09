@@ -11,7 +11,6 @@
 			//Never delete this line!
 			parent::Create();
 			
-			//$this->RegisterPropertyString("ReceiveFilter", ".*Hallo.*");
    		$this->RegisterPropertyInteger("ModulID", 22);
       $this->RegisterPropertyInteger("Intervall", 60);
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
@@ -47,8 +46,8 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-    IPS_LogMessage("IOTest", "Sende TX Command");
-    $this->SetValueInteger("TastentabelleA", 99);
+    IPS_LogMessage("IOTest", "Sende TX Command an ".$this->ReadPropertyString("ReceiveFilter")." mit M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."TX");
+    //CSCK_SendText($this->ReadPropertyString("ReceiveFilter"),"");
 		}
 		
 		public function ReceiveData($JSONString)
@@ -63,7 +62,6 @@
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
       if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
-//  			IPS_LogMessage("IOTest", $treffer['modul']." ".$treffer['A']." ".$treffer['B']." ".$treffer['C']." ".$treffer['D']);
         $this->SetValueInteger("TastentabelleA", intval($treffer['A']));
         $this->SetValueInteger("TastentabelleB", intval($treffer['B']));
         $this->SetValueInteger("TastentabelleC", intval($treffer['C']));
