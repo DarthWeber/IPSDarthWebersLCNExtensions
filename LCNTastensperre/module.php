@@ -47,8 +47,7 @@
 			  return false;
   		}
     IPS_LogMessage("IOTest", "Sende TX Command an ".($this->InstanceID)." mit >M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".TX");
-    $this->SendDataToParent(json_encode(Array("DataID" => "{B87AC955-F258-468B-92FE-F4E0866A9E18}", "Buffer" => ">M000085.PIN001\n")));
-    //CSCK_SendText($this->ReadPropertyString("ReceiveFilter"),">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."TX");
+    $this->SendDataToParent(json_encode(Array("DataID" => "{B87AC955-F258-468B-92FE-F4E0866A9E18}", "Buffer" => utf8_encode(">M000085.PIN001\n"))));
 		}
 		
 		public function ReceiveData($JSONString)
