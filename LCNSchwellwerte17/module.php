@@ -74,7 +74,7 @@
 			//Print buffer
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
       $this->SendDebug("IOTest", $line, 0);
-      if (preg_match('/%(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.T(?<reg>[1-4])(?<nr>[0-9]{1})(?<wert>[0-9]{5}))/',$line,$treffer)){
+      if (preg_match('/%(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.T(?<reg>[1-4])(?<nr>[0-9]{1})(?<wert>[0-9]{5})/',$line,$treffer)){
         $this->SetValueInteger("Reg".$treffer['reg']."Thres".$treffer['nr'], intval($treffer['wert']));
         }
       }
