@@ -43,7 +43,7 @@
 			
 			//Apply filter
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
-      //IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
+      IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
 			$this->SetReceiveDataFilter(".*=M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.T[0-9]{7}.*");
 	
   		$this->Update();
