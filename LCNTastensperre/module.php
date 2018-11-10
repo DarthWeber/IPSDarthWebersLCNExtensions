@@ -31,7 +31,7 @@
 			
 			//Apply filter
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
-      IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
+      //IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
 			$this->SetReceiveDataFilter(".*=M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.TX[0-9]{12}.*");
 	
   		$this->Update();
@@ -46,8 +46,7 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-    IPS_LogMessage("IOTest", "Sende TX Command an ".($this->InstanceID)." mit >M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".TX");
-    $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M000040.PIN001\n"))));
+    $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".TX\n"))));
 		}
 		
 		public function ReceiveData($JSONString)

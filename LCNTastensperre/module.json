@@ -1,11 +1,11 @@
 {
 	"id": "{1f4efdf2-102c-4a14-9456-f12fbf58f45c}",
-	"name": "LCNGetKeyLocks",
+	"name": "LCN Tastensperren",
 	"type": 3,
 	"vendor": "",
 	"aliases": 
 	[
-		"LCNGetKeyLocks"
+		"LCN Tastensperren"
 	],
 	"parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
 	"childRequirements": [],
