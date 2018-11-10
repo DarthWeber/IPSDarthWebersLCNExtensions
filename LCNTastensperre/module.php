@@ -12,7 +12,7 @@
 			parent::Create();
 			
    		$this->RegisterPropertyInteger("ModulID", 22);
-      $this->RegisterPropertyInteger("Intervall", 60);
+      $this->RegisterPropertyInteger("Intervall", 0);
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
       
       $this->RegisterVariableInteger("TastentabelleA", "Tastentabelle A");
