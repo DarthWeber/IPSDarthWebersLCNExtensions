@@ -7,7 +7,7 @@
 	[
 		"LCN Tastensperren"
 	],
-	"parentRequirements": ["{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}"],
+	"parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
 	"childRequirements": [],
 	"implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}"],
 	"prefix": "LCNGetKeyLocks"
