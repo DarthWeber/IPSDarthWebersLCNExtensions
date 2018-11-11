@@ -10,7 +10,7 @@
 		public function Create() {
 			//Never delete this line!
 			parent::Create();
-			$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
+			//$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
    		$this->RegisterPropertyInteger("ModulID", 22);
       $this->RegisterPropertyInteger("Intervall", 0);
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
@@ -27,7 +27,7 @@
 			parent::ApplyChanges();
 			
 			//Connect to available splitter or create a new one
-			$this->ConnectParent("{6179ED6A-FC31-413C-BB8E-1204150CF376}");
+			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			
 			//Apply filter
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
