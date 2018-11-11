@@ -10,7 +10,7 @@
 		public function Create() {
 			//Never delete this line!
 			parent::Create();
-			
+			$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
    		$this->RegisterPropertyInteger("ModulID", 22);
       $this->RegisterPropertyInteger("Intervall", 0);
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
