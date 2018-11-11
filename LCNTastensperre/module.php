@@ -61,10 +61,10 @@
 			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
       foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
       if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
-        $this->SetValueInteger("TastentabelleA", intval($treffer['A']));
-        $this->SetValueInteger("TastentabelleB", intval($treffer['B']));
-        $this->SetValueInteger("TastentabelleC", intval($treffer['C']));
-        $this->SetValueInteger("TastentabelleD", intval($treffer['D']));
+        SetValueInteger($this->GetIDForIdent("TastentabelleA"), intval($treffer['A']));
+        SetValueInteger($this->GetIDForIdent("TastentabelleB"), intval($treffer['B']));
+        SetValueInteger($this->GetIDForIdent("TastentabelleC"), intval($treffer['C']));
+        SetValueInteger($this->GetIDForIdent("TastentabelleD"), intval($treffer['D']));
         }
       }
 		}
