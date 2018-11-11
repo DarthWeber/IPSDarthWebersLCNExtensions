@@ -27,7 +27,7 @@
 			parent::ApplyChanges();
 			
 			//Connect to available splitter or create a new one
-			$this->ConnectParent("{6179ED6A-FC31-413C-BB8E-1204150CF376}");
+			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			
 			//Apply filter
 			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
@@ -46,7 +46,7 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".TX\n"))));
+      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".STX\n"))));
 		}
 		
 		public function ReceiveData($JSONString)
