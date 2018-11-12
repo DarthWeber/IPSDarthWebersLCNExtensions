@@ -52,7 +52,6 @@
             'Function' => $Function,
             'Data'     => $Data
         ];
-        $this->SendDebug('Send', $SendData, 0);
         $this->SendDebug('Send', json_encode($SendData), 0);
         $Result = $this->SendDataToParent(json_encode($SendData));
         $this->SendDebug('Result', $Result, 0);
