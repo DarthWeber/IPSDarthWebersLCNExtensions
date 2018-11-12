@@ -67,7 +67,6 @@
         ];
         $this->SendDebug('Send', json_encode($SendData), 0);
         $Result = $this->SendDataToParent(json_encode($SendData));
-        $this->SendDebug('Result', $Result, 0);
         $this->SendDebug('Result', json_decode($Result), 0);
     }
 
