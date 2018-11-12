@@ -10,7 +10,6 @@
 		public function Create() {
 			//Never delete this line!
 			parent::Create();
-			//$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
    		$this->RegisterPropertyInteger("ModulID", 22);
       $this->RegisterPropertyInteger("Intervall", 0);
       $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
@@ -20,24 +19,43 @@
       $this->RegisterVariableInteger("TastentabelleC", "Tastentabelle C");
       $this->RegisterVariableInteger("TastentabelleD", "Tastentabelle D");
       
+      $this->ConnectParent("{9BDFC391-DEFF-4B71-A76B-604DBA80F207}");
    	}
+
 		public function ApplyChanges()
 		{
-			//Never delete this line!
 			parent::ApplyChanges();
-			
-			//Connect to available splitter or create a new one
-			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-			
-			//Apply filter
-			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
-      //IPS_LogMessage("IOTest", "Inititalisiere Filter M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")));
-			$this->SetReceiveDataFilter(".*=M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.TX[0-9]{12}.*");
-	
-  		$this->Update();
-	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
+        if (IPS_GetKernelRunlevel() <> KR_READY) {
+            return;
+        }
+      $Filter = '.*"Message":2,"Target":'.$this->ReadPropertyInteger('ModulID').',"Function":"TX".*';
 
+      $this->SendDebug('FILTER', $Filter, 0);
+      $this->SetReceiveDataFilter($Filter);
+	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
 		}
+
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
+
+   public function SendTest(string $Function, string $Data)
+    {
+        $SendData = [
+            'DataID'   => '{C5755489-1880-4968-9894-F8028FE1020A}',
+            'Address'  => 0, // 0 => M, 1 => G
+            'Target'   => $this->ReadPropertyInteger('ModulID'),
+            'Function' => $Function,
+            'Data'     => $Data
+        ];
+        $this->SendDebug('Send', $SendData, 0);
+        $this->SendDebug('Send', json_encode($SendData), 0);
+        $Result = $this->SendDataToParent(json_encode($SendData));
+        $this->SendDebug('Result', $Result, 0);
+        $this->SendDebug('Result', json_decode($Result), 0);
+        //SetValueInteger($this->GetIDForIdent("TastentabelleA"), intval($treffer['A']));
+    }
 
     public function Update()
     {
@@ -46,60 +64,15 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".STX\n"))));
+      $this->SendDebug('STX', $Data, 0);
+      //@$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".STX\n"))));
 		}
 		
-		public function ReceiveData($JSONString)
-		{
-			//$data = json_decode($JSONString);
-			$data = json_decode($JSONString);
-
-			//Parse and write values to our buffer
-			//$this->SetBuffer("Test", utf8_decode($data->Buffer));
-
-			//Print buffer
-			//IPS_LogMessage("IOTest", $this->GetBuffer("Test"));
-      foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
-      if (preg_match('/=(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.TX(?<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3})/',$line,$treffer)){
-        SetValueInteger($this->GetIDForIdent("TastentabelleA"), intval($treffer['A']));
-        SetValueInteger($this->GetIDForIdent("TastentabelleB"), intval($treffer['B']));
-        SetValueInteger($this->GetIDForIdent("TastentabelleC"), intval($treffer['C']));
-        SetValueInteger($this->GetIDForIdent("TastentabelleD"), intval($treffer['D']));
-        }
-      }
-		}
-    private function SetValueInteger($Ident, $value)
+    public function ReceiveData($JSONString)
     {
-        $id = $this->GetIDForIdent($Ident);
-        if (GetValueInteger($id) <> $value)
-        {
-            SetValueInteger($id, $value);
-            return true;
-        }
-        return false;
+        $this->SendDebug('Receive', $JSONString, 0);
+        $Data = json_decode($JSONString);
+        $this->SendDebug('Receive', $Data, 0);
     }
-	
-  	private function SetValueFloat($Ident, $value)
-      {
-          $id = $this->GetIDForIdent($Ident);
-          if (GetValueFloat($id) <> $value)
-          {
-              SetValueFloat($id, $value);
-              return true;
-          }
-          return false;
-      }
-  	
-  	private function SetValueString($Ident, $value)
-      {
-          $id = $this->GetIDForIdent($Ident);
-          if (GetValueString($id) <> $value)
-          {
-              SetValueString($id, $value);
-              return true;
-          }
-          return false;
-      }
-
 	}
 ?>
