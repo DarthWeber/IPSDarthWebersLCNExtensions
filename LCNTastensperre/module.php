@@ -31,7 +31,7 @@
       $Filter = '.*"Message":2,"Segment":' .
               "0" .
               ',"Target":' .
-              $this->ReadPropertyInteger('Modul') .
+              $this->ReadPropertyInteger('ModulID') .
               ',"Function":"TX".*';
       $this->SendDebug('FILTER', $Filter, 0);
       $this->SetReceiveDataFilter($Filter);
