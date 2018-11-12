@@ -45,7 +45,7 @@
               ',"Target":' .
               $this->ReadPropertyInteger('ModulID') .
               ',"Function":""' .
-              ',"Data":"T".*';
+              ',"Data":"T[0-9]{7}"';
       $this->SendDebug('FILTER', $Filter, 0);
       $this->SetReceiveDataFilter(".*");
 	 		$this->SetTimerInterval("SendSECommand", $this->ReadPropertyInteger("Intervall") * 1000);
