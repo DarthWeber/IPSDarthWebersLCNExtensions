@@ -48,6 +48,7 @@
         $SendData = [
             'DataID'   => '{C5755489-1880-4968-9894-F8028FE1020A}',
             'Address'  => 0, // 0 => M, 1 => G
+            'Segment'  => 0,
             'Target'   => $this->ReadPropertyInteger('ModulID'),
             'Function' => $Function,
             'Data'     => $Data
