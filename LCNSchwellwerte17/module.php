@@ -44,7 +44,7 @@
               "0" .
               ',"Target":' .
               $this->ReadPropertyInteger('ModulID') .
-              ',"Function":""' .
+              ',"Function":".*"' .
               ',"Data":"T.*"';
       $this->SendDebug('FILTER', $Filter, 0);
       $this->SetReceiveDataFilter($Filter);
