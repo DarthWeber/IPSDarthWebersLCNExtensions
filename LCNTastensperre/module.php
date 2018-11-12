@@ -76,6 +76,7 @@
         $this->SendDebug('Receive', $JSONString, 0);
         $Data = json_decode($JSONString);
         $this->SendDebug('Receive', $Data, 0);
+        $this->SendDebug('Receive', $Data->Data, 0);
     }
 	}
 ?>
