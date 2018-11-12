@@ -67,7 +67,7 @@
 			  return false;
   		}
       $this->SendDebug('STX',"Sende TX Kommando...", 0);
-      $this->SendTest("PIN","001");
+      $this->SendTest("PIN001","");
       //@$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".STX\n"))));
 		}
 		
