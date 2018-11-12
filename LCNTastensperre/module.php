@@ -75,7 +75,7 @@
     {
         $this->SendDebug('Receive', $JSONString, 0);
         $this->SendDebug('Receive', $Data->Data, 0);
-        if (preg_match('/?(<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3}/'$Data->Data,$treffer)){
+        if (preg_match('/?(<A>[0-9]{3})(?<B>[0-9]{3})(?<C>[0-9]{3})(?<D>[0-9]{3}/',$Data->Data,$treffer)){
           SetValueInteger($this->GetIDForIdent("TastentabelleA"), intval($treffer['A']));
           SetValueInteger($this->GetIDForIdent("TastentabelleB"), intval($treffer['B']));
           SetValueInteger($this->GetIDForIdent("TastentabelleC"), intval($treffer['C']));
