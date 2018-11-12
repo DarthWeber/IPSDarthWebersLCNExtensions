@@ -1,89 +1,43 @@
-<?php
+<?
+	class LCNGetKeyLocks extends IPSModule
+	{
 
-include_once(__DIR__ . "/../libs/DebugHelper.php");
+  	public function Destroy() 
+  	{
+  		//Never delete this line!
+  		parent::Destroy();
+  	}
+		public function Create() {
+			//Never delete this line!
+			parent::Create();
+   		$this->RegisterPropertyInteger("ModulID", 22);
+      $this->RegisterPropertyInteger("Intervall", 0);
+      $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
+      
+      $this->RegisterVariableInteger("TastentabelleA", "Tastentabelle A");
+      $this->RegisterVariableInteger("TastentabelleB", "Tastentabelle B");
+      $this->RegisterVariableInteger("TastentabelleC", "Tastentabelle C");
+      $this->RegisterVariableInteger("TastentabelleD", "Tastentabelle D");
+      
+      $this->ConnectParent("{9BDFC391-DEFF-4B71-A76B-604DBA80F207}");
+   	}
 
-/*
- * @addtogroup network
- * @{
- *
- * @package       LCNTest
- * @file          module.php
- * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2018 Michael Tröger
- * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       0.1
- */
-
-/**
- * LCNTestDevice Klasse implementiert einen Sniffer für den Datenaustausch mit dem LCN Gateway.
- * Erweitert IPSModule.
- *
- * @package       LCNTest
- * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2018 Michael Tröger
- * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       0.1
- * @example <b>Ohne</b>
- */
-class LCNTestDevice extends ipsmodule
-{
-
-    use DebugHelper; // Erweitert die SendDebug Methode von IPS um Arrays, Objekte und bool.
-    /**
-     * Interne Funktion des SDK.
-     *
-     * @access public
-     */
-    public function Create()
-    {
-        parent::Create();
-        $this->RegisterPropertyInteger('Modul', 0);
-        $this->RegisterPropertyInteger('Segment', 0);
-        $this->ConnectParent("{9BDFC391-DEFF-4B71-A76B-604DBA80F207}");
-    }
-
-    /**
-     * Interne Funktion des SDK.
-     *
-     * @access public
-     */
-    public function ApplyChanges()
-    {
-        $this->RegisterMessage(0, IPS_KERNELSTARTED);
-
-        parent::ApplyChanges();
-
+		public function ApplyChanges()
+		{
+			parent::ApplyChanges();
         if (IPS_GetKernelRunlevel() <> KR_READY) {
             return;
         }
-        $Filter = '.*"Message":2,"Segment":' .
-                $this->ReadPropertyInteger('Segment') .
-                ',"Target":' .
-                $this->ReadPropertyInteger('Modul') .
-                ',"Function":"TX".*';
+      $Filter = '.*"Message":2,"Segment":' .
+              "0" .
+              ',"Target":' .
+              $this->ReadPropertyInteger('Modul') .
+              ',"Function":"TX".*';
+      $this->SendDebug('FILTER', $Filter, 0);
+      $this->SetReceiveDataFilter($Filter);
+	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
+		}
 
-        $this->SendDebug('FILTER', $Filter, 0);
-        $this->SetReceiveDataFilter($Filter);
-    }
-
-    /**
-     * Interne Funktion des SDK.
-     *
-     * @access public
-     */
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
-    {
-        switch ($Message) {
-            case IPS_KERNELSTARTED: // Nach dem IPS-Start
-                $this->KernelReady(); // Sagt alles.
-                break;
-        }
-    }
-
-    /**
-     * Wird ausgeführt wenn der Kernel hochgefahren wurde.
-     * @access protected
-     */
     protected function KernelReady()
     {
         $this->ApplyChanges();
@@ -94,8 +48,7 @@ class LCNTestDevice extends ipsmodule
         $SendData = [
             'DataID'   => '{C5755489-1880-4968-9894-F8028FE1020A}',
             'Address'  => 0, // 0 => M, 1 => G
-            'Segment'  => $this->ReadPropertyInteger('Segment'),
-            'Target'   => $this->ReadPropertyInteger('Modul'),
+            'Target'   => $this->ReadPropertyInteger('ModulID'),
             'Function' => $Function,
             'Data'     => $Data
         ];
@@ -104,19 +57,25 @@ class LCNTestDevice extends ipsmodule
         $Result = $this->SendDataToParent(json_encode($SendData));
         $this->SendDebug('Result', $Result, 0);
         $this->SendDebug('Result', json_decode($Result), 0);
+        //SetValueInteger($this->GetIDForIdent("TastentabelleA"), intval($treffer['A']));
     }
 
-    /**
-     * Empfängt Daten vom Parent.
-     *
-     * @access public
-     * @param string $JSONString Das empfangene JSON-kodierte Objekt vom Parent.
-     */
+    public function Update()
+    {
+  		if (IPS_GetKernelRunlevel() !== 10103)
+	   	{
+		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
+			  return false;
+  		}
+      $this->SendDebug('STX',"Sende TX Kommando...", 0);
+      //@$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".STX\n"))));
+		}
+		
     public function ReceiveData($JSONString)
     {
         $this->SendDebug('Receive', $JSONString, 0);
         $Data = json_decode($JSONString);
         $this->SendDebug('Receive', $Data, 0);
     }
-
-}
+	}
+?>
