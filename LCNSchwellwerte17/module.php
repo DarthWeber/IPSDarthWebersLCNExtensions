@@ -47,7 +47,7 @@
               ',"Function":""' .
               ',"Data":"T.*"';
       $this->SendDebug('FILTER', $Filter, 0);
-      $this->SetReceiveDataFilter(".*");
+      $this->SetReceiveDataFilter($Filter);
 	 		$this->SetTimerInterval("SendSECommand", $this->ReadPropertyInteger("Intervall") * 1000);
 		}
 
