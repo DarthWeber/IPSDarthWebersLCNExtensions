@@ -10,7 +10,6 @@
 		public function Create() {
 			//Never delete this line!
 			parent::Create();
-			
    		$this->RegisterPropertyInteger("ModulID", 22);
       $this->RegisterPropertyInteger("Intervall", 0);
       $this->RegisterTimer("SendSECommand", 0, 'LCNGetThresholds_Update($_IPS[\'TARGET\']);');
@@ -32,23 +31,45 @@
       $this->RegisterVariableInteger("Reg4Thres3", "Register 4 Schwellwert 3");
       $this->RegisterVariableInteger("Reg4Thres4", "Register 4 Schwellwert 4");
       
+      $this->ConnectParent("{9BDFC391-DEFF-4B71-A76B-604DBA80F207}");
    	}
+
 		public function ApplyChanges()
 		{
-			//Never delete this line!
 			parent::ApplyChanges();
-			
-			//Connect to available splitter or create a new one
-			$this->ConnectParent("{6179ED6A-FC31-413C-BB8E-1204150CF376}");
-			
-			//Apply filter
-			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
-			$this->SetReceiveDataFilter(".*%M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.T[0-9]{7}.*");
-	
-  		$this->Update();
+        if (IPS_GetKernelRunlevel() <> KR_READY) {
+            return;
+        }
+      $Filter = '.*"Message":2,"Segment":' .
+              "0" .
+              ',"Target":' .
+              $this->ReadPropertyInteger('ModulID') .
+              ',"Function":"T"[0-9]{7}.*';
+      $this->SendDebug('FILTER', $Filter, 0);
+      $this->SetReceiveDataFilter($Filter);
 	 		$this->SetTimerInterval("SendSECommand", $this->ReadPropertyInteger("Intervall") * 1000);
-
 		}
+
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
+
+   public function SendTest(string $Function, string $Data)
+    {
+        $SendData = [
+            'DataID'   => '{C5755489-1880-4968-9894-F8028FE1020A}',
+            'Address'  => 0, // 0 => M, 1 => G
+            'Segment'  => 0,
+            'Target'   => $this->ReadPropertyInteger('ModulID'),
+            'Function' => $Function,
+            'Data'     => $Data
+        ];
+        $this->SendDebug('Send', json_encode($SendData), 0);
+        $Result = $this->SendDataToParent(json_encode($SendData));
+        $this->SendDebug('Result', $Result, 0);
+        $this->SendDebug('Result', json_decode($Result), 0);
+    }
 
     public function Update()
     {
@@ -57,27 +78,19 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE1\n"))));
-      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE2\n"))));
-      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE3\n"))));
-      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE4\n"))));
+      $this->SendDebug('SE',"Sende SE Kommandos...", 0);
+      $this->SendTest("SE1","");
+      $this->SendTest("SE2","");
+      $this->SendTest("SE3","");
+      $this->SendTest("SE4","");
 		}
 		
-		public function ReceiveData($JSONString)
-		{
-			//$data = json_decode($JSONString);
-			$data = json_decode($JSONString);
-
-			//Parse and write values to our buffer
-			//$this->SetBuffer("Test", utf8_decode($data->Buffer));
-
-			//Print buffer
-      foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
-      $this->SendDebug("IOTest", $line, 0);
-      if (preg_match('/%(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.T(?<reg>[1-4])(?<nr>[0-9]{1})(?<wert>[0-9]{5})/',$line,$treffer)){
-        SetValueInteger($this->GetIDForIdent("Reg".$treffer['reg']."Thres".$treffer['nr']), intval($treffer['wert']));
+    public function ReceiveData($JSONString)
+    {
+        $this->SendDebug('Receive', $JSONString, 0);
+        if (preg_match('/(?<reg>[1-4])(?<nr>[0-9]{1})(?<wert>[0-9]{5})/',json_decode($JSONString)->Data,$treffer)){
+          SetValueInteger($this->GetIDForIdent("Reg".$treffer['reg']."Thres".$treffer['nr']), intval($treffer['wert']));
         }
-      }
-		}
+    }
 	}
 ?>
