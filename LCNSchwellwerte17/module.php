@@ -44,7 +44,7 @@
               "0" .
               ',"Target":' .
               $this->ReadPropertyInteger('ModulID') .
-              ',"Function":"T".*';
+              ',"Function":"TX".*';
       $this->SendDebug('FILTER', $Filter, 0);
       $this->SetReceiveDataFilter($Filter);
 	 		$this->SetTimerInterval("SendSECommand", $this->ReadPropertyInteger("Intervall") * 1000);
