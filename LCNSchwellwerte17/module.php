@@ -1,5 +1,5 @@
 <?
-	class LCNGetKeyLocks extends IPSModule
+	class LCNGetThresholds extends IPSModule
 	{
 
   	public function Destroy() 
@@ -10,52 +10,45 @@
 		public function Create() {
 			//Never delete this line!
 			parent::Create();
+			
    		$this->RegisterPropertyInteger("ModulID", 22);
       $this->RegisterPropertyInteger("Intervall", 0);
-      $this->RegisterTimer("SendTXCommand", 0, 'LCNGetKeyLocks_Update($_IPS[\'TARGET\']);');
+      $this->RegisterTimer("SendSECommand", 0, 'LCNGetThresholds_Update($_IPS[\'TARGET\']);');
       
-      $this->RegisterVariableInteger("TastentabelleA", "Tastentabelle A");
-      $this->RegisterVariableInteger("TastentabelleB", "Tastentabelle B");
-      $this->RegisterVariableInteger("TastentabelleC", "Tastentabelle C");
-      $this->RegisterVariableInteger("TastentabelleD", "Tastentabelle D");
+      $this->RegisterVariableInteger("Reg1Thres1", "Register 1 Schwellwert 1");
+      $this->RegisterVariableInteger("Reg1Thres2", "Register 1 Schwellwert 2");
+      $this->RegisterVariableInteger("Reg1Thres3", "Register 1 Schwellwert 3");
+      $this->RegisterVariableInteger("Reg1Thres4", "Register 1 Schwellwert 4");
+      $this->RegisterVariableInteger("Reg2Thres1", "Register 2 Schwellwert 1");
+      $this->RegisterVariableInteger("Reg2Thres2", "Register 2 Schwellwert 2");
+      $this->RegisterVariableInteger("Reg2Thres3", "Register 2 Schwellwert 3");
+      $this->RegisterVariableInteger("Reg2Thres4", "Register 2 Schwellwert 4");
+      $this->RegisterVariableInteger("Reg3Thres1", "Register 3 Schwellwert 1");
+      $this->RegisterVariableInteger("Reg3Thres2", "Register 3 Schwellwert 2");
+      $this->RegisterVariableInteger("Reg3Thres3", "Register 3 Schwellwert 3");
+      $this->RegisterVariableInteger("Reg3Thres4", "Register 3 Schwellwert 4");
+      $this->RegisterVariableInteger("Reg4Thres1", "Register 4 Schwellwert 1");
+      $this->RegisterVariableInteger("Reg4Thres2", "Register 4 Schwellwert 2");
+      $this->RegisterVariableInteger("Reg4Thres3", "Register 4 Schwellwert 3");
+      $this->RegisterVariableInteger("Reg4Thres4", "Register 4 Schwellwert 4");
       
-      $this->ConnectParent("{9BDFC391-DEFF-4B71-A76B-604DBA80F207}");
    	}
-
 		public function ApplyChanges()
 		{
+			//Never delete this line!
 			parent::ApplyChanges();
-        if (IPS_GetKernelRunlevel() <> KR_READY) {
-            return;
-        }
-      $Filter = '.*"Message":2,"Target":'.$this->ReadPropertyInteger('ModulID').',"Function":"TX".*';
+			
+			//Connect to available splitter or create a new one
+			$this->ConnectParent("{6179ED6A-FC31-413C-BB8E-1204150CF376}");
+			
+			//Apply filter
+			//$this->SetReceiveDataFilter($this->ReadPropertyString("ReceiveFilter"));
+			$this->SetReceiveDataFilter(".*%M".sprintf("%06d",$this->ReadPropertyInteger("ModulID"))."\.T[0-9]{7}.*");
+	
+  		$this->Update();
+	 		$this->SetTimerInterval("SendSECommand", $this->ReadPropertyInteger("Intervall") * 1000);
 
-      $this->SendDebug('FILTER', $Filter, 0);
-      $this->SetReceiveDataFilter($Filter);
-	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
 		}
-
-    protected function KernelReady()
-    {
-        $this->ApplyChanges();
-    }
-
-   public function SendTest(string $Function, string $Data)
-    {
-        $SendData = [
-            'DataID'   => '{C5755489-1880-4968-9894-F8028FE1020A}',
-            'Address'  => 0, // 0 => M, 1 => G
-            'Target'   => $this->ReadPropertyInteger('ModulID'),
-            'Function' => $Function,
-            'Data'     => $Data
-        ];
-        $this->SendDebug('Send', $SendData, 0);
-        $this->SendDebug('Send', json_encode($SendData), 0);
-        $Result = $this->SendDataToParent(json_encode($SendData));
-        $this->SendDebug('Result', $Result, 0);
-        $this->SendDebug('Result', json_decode($Result), 0);
-        //SetValueInteger($this->GetIDForIdent("TastentabelleA"), intval($treffer['A']));
-    }
 
     public function Update()
     {
@@ -64,15 +57,27 @@
 		  	$this->SendDebug("FUNCTION -Update-", "Kernel is not ready! Kernel Runlevel = ".IPS_GetKernelRunlevel(), 0);
 			  return false;
   		}
-      $this->SendDebug('STX', $Data, 0);
-      //@$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".STX\n"))));
+      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE1\n"))));
+      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE2\n"))));
+      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE3\n"))));
+      @$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode(">M".sprintf("%06d",$this->ReadPropertyInteger("ModulID")).".SE4\n"))));
 		}
 		
-    public function ReceiveData($JSONString)
-    {
-        $this->SendDebug('Receive', $JSONString, 0);
-        $Data = json_decode($JSONString);
-        $this->SendDebug('Receive', $Data, 0);
-    }
+		public function ReceiveData($JSONString)
+		{
+			//$data = json_decode($JSONString);
+			$data = json_decode($JSONString);
+
+			//Parse and write values to our buffer
+			//$this->SetBuffer("Test", utf8_decode($data->Buffer));
+
+			//Print buffer
+      foreach(preg_split("/((\r?\n)|(\r\n?))/", utf8_decode($data->Buffer)) as $line){
+      $this->SendDebug("IOTest", $line, 0);
+      if (preg_match('/%(?<modul>M'.sprintf("%06d",$this->ReadPropertyInteger("ModulID")).')\.T(?<reg>[1-4])(?<nr>[0-9]{1})(?<wert>[0-9]{5})/',$line,$treffer)){
+        SetValueInteger($this->GetIDForIdent("Reg".$treffer['reg']."Thres".$treffer['nr']), intval($treffer['wert']));
+        }
+      }
+		}
 	}
 ?>
