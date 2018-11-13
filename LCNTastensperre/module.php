@@ -36,6 +36,8 @@
       $this->SendDebug('FILTER', $Filter, 0);
       $this->SetReceiveDataFilter($Filter);
 	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
+      
+      $this->SetSummary("M");
 		}
 
     protected function KernelReady()
