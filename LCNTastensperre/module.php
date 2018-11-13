@@ -37,7 +37,7 @@
       $this->SetReceiveDataFilter($Filter);
 	 		$this->SetTimerInterval("SendTXCommand", $this->ReadPropertyInteger("Intervall") * 1000);
       
-      $this->SetSummary("M");
+      $this->SetSummary("Modul-ID: ".$this->ReadPropertyInteger("ModulID");
 		}
 
     protected function KernelReady()
