@@ -44,7 +44,7 @@
               "0" .
               ',"Target":' .
               $this->ReadPropertyInteger('ModulID') .
-              ',"Function":"","Data":"T".*';
+              ',"Function":"","Data":"T[0-9]{7}".*';
       $this->SendDebug('FILTER', $Filter, 0);
       //{"DataID":"{0BD35CD6-01E1-497E-A656-4A9E629123A0}","Message":1,"Segment":0,"Target":85,"Function":"","Data":"T1465535"}
       $this->SetReceiveDataFilter($Filter);    
